@@ -242,7 +242,7 @@ export function NoteActions({
         ) : null}
       </div>
 
-      <Button variant="danger" onClick={() => setConfirmOpen(true)}>
+      <Button variant="dangerGhost" onClick={() => setConfirmOpen(true)}>
         <TrashIcon className="h-4 w-4" />
         删除
       </Button>

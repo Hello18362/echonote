@@ -88,7 +88,7 @@ export function RecordingToolbar({ total, query }: { total: number; query: ListQ
             onChange={(e) => setKeyword(e.target.value)}
             placeholder="搜索标题或内容"
             aria-label="搜索录音"
-            className="h-11 w-full rounded-xl border border-slate-200 bg-white pl-9 pr-9 text-sm text-slate-900 outline-none transition-colors placeholder:text-slate-400 focus:border-brand-500 focus:ring-2 focus:ring-brand-100"
+            className="h-11 w-full rounded-full border border-transparent bg-white pl-10 pr-9 text-[14px] text-slate-900 outline-none transition-colors duration-200 placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/10"
           />
           {keyword ? (
             <button
@@ -106,7 +106,7 @@ export function RecordingToolbar({ total, query }: { total: number; query: ListQ
           value={query.sort ?? "new"}
           onChange={(e) => navigate({ sort: e.target.value })}
           aria-label="排序方式"
-          className="h-11 shrink-0 rounded-xl border border-slate-200 bg-white px-3 text-sm text-slate-600 outline-none transition-colors focus:border-brand-500"
+          className="h-11 shrink-0 rounded-full border border-transparent bg-white px-4 text-[14px] text-slate-600 outline-none transition-colors duration-200 focus:border-brand-500"
         >
           {SORT_OPTIONS.map((o) => (
             <option key={o.value} value={o.value}>
@@ -140,10 +140,10 @@ export function RecordingToolbar({ total, query }: { total: number; query: ListQ
                 type="button"
                 onClick={() => navigate({ status: f.value })}
                 className={cn(
-                  "pressable h-9 rounded-lg px-3 text-[13px] font-medium transition-colors",
+                  "h-9 rounded-full px-3.5 text-[13px] font-medium transition-colors duration-200",
                   on
-                    ? "bg-slate-900 text-white"
-                    : "border border-slate-200 bg-white text-slate-500 hover:bg-slate-50 hover:text-slate-900",
+                    ? "bg-white text-slate-900 shadow-[0_1px_3px_rgba(0,0,0,0.1)]"
+                    : "text-slate-500 hover:text-slate-900",
                 )}
               >
                 {f.label}
@@ -183,7 +183,7 @@ export function RecordingToolbar({ total, query }: { total: number; query: ListQ
           <button
             type="button"
             onClick={() => setActive(true)}
-            className="pressable inline-flex h-9 items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 text-[13px] font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+            className="h-9 rounded-full bg-white px-3.5 text-[13px] font-medium text-slate-600 shadow-[0_1px_3px_rgba(0,0,0,0.06)] transition-colors duration-200 hover:text-slate-900"
           >
             <SelectIcon className="h-3.5 w-3.5" />
             {total > 0 ? "批量选择" : "选择"}

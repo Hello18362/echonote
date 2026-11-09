@@ -15,7 +15,7 @@ export default function LoginPage({
 }) {
   return (
     <main className="flex min-h-[100dvh] items-center justify-center px-6">
-      <div className="w-full max-w-[340px] rounded-2xl border border-slate-100 bg-white p-7 shadow-card">
+      <div className="w-full max-w-[360px] rounded-3xl bg-white p-8 shadow-card">
         <LoginForm
           next={safeNext(searchParams.next)}
           gateOff={!accessEnabled()}

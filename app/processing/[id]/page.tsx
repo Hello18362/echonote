@@ -16,7 +16,7 @@ export default function ProcessingPage({ params }: { params: { id: string } }) {
       </Link>
 
       <div className="mt-8 text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900">正在处理</h1>
+        <h1 className="text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-slate-900 sm:text-[40px]">正在处理</h1>
         <p className="mt-2 text-sm text-slate-500">转写与纪要生成会依次完成</p>
       </div>
 

@@ -144,7 +144,7 @@ export function LoginForm({
         autoComplete="current-password"
         autoFocus
         enterKeyHint="go"
-        className="mb-3 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-400 focus:ring-2 focus:ring-brand-100"
+        className="mb-3 w-full rounded-xl border border-transparent bg-slate-50 px-4 py-3.5 text-[15px] text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:bg-white focus:ring-4 focus:ring-brand-500/10"
       />
 
       {error ? (

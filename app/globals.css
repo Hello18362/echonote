@@ -12,9 +12,74 @@ body {
 }
 
 body {
-  background-color: #fafafa;
-  color: #0f172a;
+  background-color: #f5f5f7;
+  color: #1d1d1f;
+  font-feature-settings: "kern" 1;
+  letter-spacing: -0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* ---------- apple.com 的基础构件 ---------- */
+@layer components {
+  /* 毛玻璃顶栏：半透明 + 饱和模糊 + 一条极细分割线 */
+  .apple-nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background-color: rgba(251, 251, 253, 0.8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  /* 胶囊按钮，radius 980px 是苹果的固定值 */
+  .btn-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.375rem;
+    border-radius: 980px;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+      background-color 200ms cubic-bezier(0.28, 0.11, 0.32, 1),
+      color 200ms cubic-bezier(0.28, 0.11, 0.32, 1),
+      border-color 200ms cubic-bezier(0.28, 0.11, 0.32, 1),
+      transform 200ms cubic-bezier(0.28, 0.11, 0.32, 1);
+  }
+  .btn-pill:active:not(:disabled) {
+    transform: scale(0.985);
+  }
+  .btn-pill:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background-color: #0071e3;
+    color: #ffffff;
+  }
+  .btn-primary:hover:not(:disabled) {
+    background-color: #0077ed;
+  }
+
+  .btn-secondary {
+    background-color: #f5f5f7;
+    color: #1d1d1f;
+  }
+  .btn-secondary:hover:not(:disabled) {
+    background-color: #e8e8ed;
+  }
+
+  .btn-ghost {
+    background-color: transparent;
+    color: #0071e3;
+  }
+  .btn-ghost:hover:not(:disabled) {
+    background-color: rgba(0, 113, 227, 0.06);
+  }
 }
 
 /* ---------- 04-01 / 02-11 按压回弹：压深 + 内阴影加深，松手过冲回弹 ---------- */

@@ -259,7 +259,7 @@ export default function SettingsPage() {
       </Link>
 
       <header className="stagger-item mt-4">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">设置</h1>
+        <h1 className="text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-slate-900 sm:text-[40px]">设置</h1>
         <p className="mt-2 text-sm leading-relaxed text-slate-500">
           配置语音识别与大模型。保存后<strong className="font-medium text-slate-700">立即生效</strong>
           ，不需要改文件、也不需要重启服务。

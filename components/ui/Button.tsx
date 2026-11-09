@@ -3,7 +3,7 @@
 import { useCallback, useRef, useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { cn } from "@/lib/cn";
 
-type Variant = "primary" | "danger" | "outline" | "ghost";
+type Variant = "primary" | "danger" | "dangerGhost" | "outline" | "ghost";
 
 type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
   variant?: Variant;
@@ -11,10 +11,13 @@ type Props = ButtonHTMLAttributes<HTMLButtonElement> & {
 };
 
 const VARIANTS: Record<Variant, string> = {
-  primary: "bg-brand-600 text-white hover:bg-brand-700 shadow-sm",
-  danger: "bg-red-600 text-white hover:bg-red-700 shadow-sm",
-  outline: "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50",
-  ghost: "text-slate-500 hover:bg-slate-100 hover:text-slate-700",
+  primary: "btn-primary",
+  danger: "bg-red-500 text-white hover:bg-red-600",
+  // 页面主操作区里的删除：淡红底、红字，不跟主按钮抢注意力；
+  // 真正的 destructive 确认仍用实心 danger
+  dangerGhost: "bg-red-50 text-red-600 hover:bg-red-100",
+  outline: "btn-secondary",
+  ghost: "btn-ghost",
 };
 
 type Ripple = { id: number; x: number; y: number; size: number };
@@ -58,7 +61,7 @@ export function Button({
         onPointerDown?.(e);
       }}
       className={cn(
-        "pressable relative inline-flex min-h-[44px] select-none items-center justify-center gap-2 overflow-hidden rounded-xl px-4 text-sm font-medium",
+        "btn-pill relative inline-flex min-h-[44px] select-none items-center justify-center gap-2 overflow-hidden px-5 text-[15px]",
         VARIANTS[variant],
         className,
       )}

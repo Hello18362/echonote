@@ -20,7 +20,7 @@ export default async function RecordPage() {
       </Link>
 
       <div className="stagger-item mt-8 flex flex-col items-center text-center">
-        <h1 className="text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+        <h1 className="text-[32px] font-semibold leading-[1.1] tracking-[-0.03em] text-slate-900 sm:text-[40px]">
           新建录音
         </h1>
         <p className="mt-2 text-sm text-slate-500">

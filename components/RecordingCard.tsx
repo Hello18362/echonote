@@ -67,26 +67,6 @@ export function RecordingCard({
     captureOrigin();
   };
 
-  // 04-13 3D 倾斜光影（仅支持 hover 的设备）
-  const handleMove = (e: MouseEvent<HTMLElement>) => {
-    if (active) return;
-    const el = cardRef.current;
-    if (!el) return;
-    if (!window.matchMedia("(hover: hover)").matches) return;
-    const r = el.getBoundingClientRect();
-    const px = (e.clientX - r.left) / r.width;
-    const py = (e.clientY - r.top) / r.height;
-    el.style.setProperty("--mx", `${px * 100}%`);
-    el.style.setProperty("--my", `${py * 100}%`);
-    el.style.transform = `perspective(900px) rotateX(${(0.5 - py) * 5}deg) rotateY(${(px - 0.5) * 6}deg) translateY(-2px)`;
-  };
-
-  const handleLeave = () => {
-    const el = cardRef.current;
-    if (!el) return;
-    el.style.transform = "";
-  };
-
   const handleDelete = async () => {
     const res = await fetch(`/api/recordings/${id}`, { method: "DELETE" });
     if (!res.ok) throw new Error("删除失败");
@@ -99,16 +79,10 @@ export function RecordingCard({
       <article
         ref={cardRef}
         data-recording-id={id}
-        onMouseMove={handleMove}
-        onMouseLeave={handleLeave}
         style={{ ["--i" as string]: index }}
         className={cn(
-          "stagger-item tilt-3d group relative rounded-2xl border bg-white p-5 shadow-card transition-[box-shadow,border-color,transform] duration-200",
-          active
-            ? selected
-              ? "border-brand-400 ring-2 ring-brand-200"
-              : "border-slate-200/80 hover:border-brand-200"
-            : "border-slate-200/80 hover:border-slate-300 hover:shadow-card-hover",
+          "stagger-item group relative rounded-2xl bg-white p-6 shadow-card transition-[box-shadow,transform] duration-300 ease-apple hover:-translate-y-0.5 hover:shadow-card-hover",
+          active && selected && "ring-2 ring-brand-500",
         )}
       >
         <Link
@@ -135,7 +109,7 @@ export function RecordingCard({
 
         <div className={cn("pointer-events-none relative z-10", active && "pl-7")}>
           <div className="flex items-start justify-between gap-3">
-            <h3 className="line-clamp-1 flex-1 text-[15px] font-semibold text-slate-900">
+            <h3 className="line-clamp-1 flex-1 text-[16px] font-semibold tracking-[-0.01em] text-slate-900">
               {title}
             </h3>
             <div className="flex shrink-0 items-center gap-1.5">
@@ -154,7 +128,7 @@ export function RecordingCard({
             <span>{durationLabel}</span>
           </div>
 
-          <p className="mt-3 line-clamp-2 min-h-[40px] pr-9 text-sm leading-relaxed text-slate-500">
+          <p className="mt-2.5 line-clamp-2 min-h-[40px] pr-9 text-[13px] leading-relaxed text-slate-500">
             {summary || (status === "error" ? "处理失败，可进入详情页重试" : "暂无摘要")}
           </p>
 

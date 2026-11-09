@@ -24,7 +24,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#2563eb",
+  themeColor: "#f5f5f7",
   // 让内容延伸到刘海屏边缘，再用 env(safe-area-inset-*) 留白
   viewportFit: "cover",
 };

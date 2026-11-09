@@ -1,0 +1,25 @@
+node_modules
+.next
+out
+.env
+*.db
+*.db-journal
+.DS_Store
+next-env.d.ts
+tsconfig.tsbuildinfo
+shots
+.tmp
+# 上传的原始音频，体积大且属于用户数据
+data/
+# next dev --experimental-https 生成的本地证书
+certificates/
+
+# 备份副本：里面是 dev.db 快照，可能含真实录音与已保存的 Key，绝不能提交
+backups/
+# 本地工具二进制（cloudflared 等）
+tools/
+# 运行时日志
+*.log
+*.log.err
+# 工作区内部数据（会话记录、记忆文件）
+.workbuddy/

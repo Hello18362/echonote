@@ -23,7 +23,7 @@ export function AudioPlayer({ id, durationLabel }: { id: string; durationLabel: 
   }, [speed]);
 
   return (
-    <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-card sm:p-5">
+    <div className="rounded-[20px] bg-white p-4 shadow-card sm:p-5">
       <div className="flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-center gap-2">
           <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-brand-600">
@@ -37,7 +37,8 @@ export function AudioPlayer({ id, durationLabel }: { id: string; durationLabel: 
           </div>
         </div>
 
-        <div className="flex shrink-0 items-center gap-1">
+        {/* 倍速：苹果分段控件，选中项是白底小胶囊，不是黑方块 */}
+        <div className="flex shrink-0 items-center rounded-full bg-slate-100 p-0.5">
           {SPEEDS.map((s) => (
             <button
               key={s}
@@ -46,10 +47,10 @@ export function AudioPlayer({ id, durationLabel }: { id: string; durationLabel: 
               aria-pressed={speed === s}
               aria-label={`${s} 倍速`}
               className={cn(
-                "pressable h-8 rounded-md px-2 text-xs font-medium tabular-nums transition-colors",
+                "pressable h-7 rounded-full px-2.5 text-[12px] font-medium tabular-nums transition-colors duration-200",
                 speed === s
-                  ? "bg-slate-900 text-white"
-                  : "bg-slate-50 text-slate-500 hover:bg-slate-100 hover:text-slate-800",
+                  ? "bg-white text-slate-900 shadow-[0_1px_3px_rgba(0,0,0,0.12)]"
+                  : "text-slate-500 hover:text-slate-800",
               )}
             >
               {s}×

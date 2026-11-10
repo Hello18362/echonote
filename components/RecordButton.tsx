@@ -269,7 +269,7 @@ export function RecordButton({ mockMode = false }: { mockMode?: boolean }) {
     <div className="flex flex-col items-center">
       {/* 演示模式提示：不提示清楚，用户会以为真的识别了 */}
       {mockMode ? (
-        <div className="mb-4 w-full max-w-md rounded-xl border border-slate-200 bg-slate-50 px-4 py-3.5 text-left">
+        <div className="mb-4 w-full max-w-md rounded-[16px] bg-slate-50 px-4 py-3.5 text-left">
           <p className="text-sm font-medium text-slate-700">演示模式：不会识别你的录音</p>
           <p className="mt-1.5 text-xs leading-relaxed text-slate-500">
             还没配置语音识别 / 大模型服务。提交后会返回一份内置的示例纪要（一段虚构的项目周会），
@@ -300,7 +300,7 @@ export function RecordButton({ mockMode = false }: { mockMode?: boolean }) {
         </div>
       ) : null}
 
-      {/* 大圆形录音按钮：初始灰色，录制中红色 + 呼吸动画 */}
+      {/* 大圆形录音按钮：待录是苹果蓝，录制中红色 + 呼吸动画 */}
       <div className="relative flex h-32 w-32 items-center justify-center">
         {recording ? (
           <>
@@ -321,7 +321,7 @@ export function RecordButton({ mockMode = false }: { mockMode?: boolean }) {
             "pressable relative z-10 flex h-28 w-28 items-center justify-center rounded-full text-white shadow-lg transition-colors duration-300",
             recording
               ? "bg-red-500 shadow-[0_10px_40px_rgba(239,68,68,0.35)]"
-              : "bg-slate-300 hover:bg-slate-400",
+              : "bg-brand-600 shadow-[0_10px_36px_rgba(0,113,227,0.32)] hover:bg-brand-700",
             busy ? "cursor-wait opacity-90" : "",
           ].join(" ")}
         >
@@ -382,7 +382,7 @@ export function RecordButton({ mockMode = false }: { mockMode?: boolean }) {
       ) : null}
 
       {/* 上传音频入口 */}
-      <label className="pressable mt-8 inline-flex min-h-[44px] cursor-pointer items-center gap-2 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-600 shadow-sm transition-colors duration-200 hover:bg-slate-50">
+      <label className="pressable mt-8 inline-flex min-h-[44px] cursor-pointer items-center gap-2 btn-pill bg-white px-5 text-[15px] font-medium text-slate-700 shadow-card transition-colors duration-200 hover:shadow-card-hover">
         <UploadIcon className="h-4 w-4" />
         上传音频文件
         <input

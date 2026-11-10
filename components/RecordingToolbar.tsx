@@ -157,7 +157,7 @@ export function RecordingToolbar({ total, query }: { total: number; query: ListQ
             <button
               type="button"
               onClick={() => (allSelected ? clear() : selectAllRendered())}
-              className="pressable h-9 rounded-lg border border-slate-200 bg-white px-3 text-[13px] font-medium text-slate-600 transition-colors hover:bg-slate-50"
+              className="pressable h-9 btn-pill bg-white px-3.5 text-[13px] font-medium text-slate-600 shadow-card transition-shadow"
             >
               {allSelected ? "取消全选" : "全选"}
             </button>
@@ -165,7 +165,7 @@ export function RecordingToolbar({ total, query }: { total: number; query: ListQ
               type="button"
               disabled={selected.length === 0 || deleting}
               onClick={() => setConfirmOpen(true)}
-              className="pressable inline-flex h-9 items-center gap-1 rounded-lg bg-red-500 px-3 text-[13px] font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-40"
+              className="pressable inline-flex h-9 btn-pill items-center gap-1 bg-red-500 px-3.5 text-[13px] font-medium text-white transition-colors hover:bg-red-600 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <TrashIcon className="h-3.5 w-3.5" />
               删除{selected.length ? ` ${selected.length}` : ""}

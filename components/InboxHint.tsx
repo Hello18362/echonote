@@ -95,7 +95,7 @@ export function InboxHint({ dir }: { dir: string }) {
   };
 
   return (
-    <section className="stagger-item mt-7 rounded-2xl border border-slate-200 bg-white p-4 shadow-card sm:p-5">
+    <section className="stagger-item mt-7 rounded-[20px] bg-white p-4 shadow-card sm:p-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex min-w-0 items-start gap-3">
           <div className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-brand-600">
@@ -126,7 +126,7 @@ export function InboxHint({ dir }: { dir: string }) {
           <button
             type="button"
             onClick={() => void openFolder()}
-            className="pressable inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900"
+            className="pressable inline-flex min-h-[40px] items-center justify-center gap-1.5 btn-pill btn-secondary px-3.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
           >
             <FolderIcon className="h-4 w-4" />
             打开文件夹
@@ -135,7 +135,7 @@ export function InboxHint({ dir }: { dir: string }) {
             type="button"
             onClick={() => void scan(true)}
             disabled={busy}
-            className="pressable inline-flex min-h-[40px] items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3.5 text-sm font-medium text-slate-600 transition-colors hover:bg-slate-50 hover:text-slate-900 disabled:opacity-60"
+            className="pressable inline-flex min-h-[40px] items-center justify-center gap-1.5 btn-pill btn-secondary px-3.5 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900 disabled:opacity-60"
           >
             <RefreshIcon className={cn("h-4 w-4", busy && "animate-spin")} />
             {busy ? "扫描中…" : "立即扫描"}

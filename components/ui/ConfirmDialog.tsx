@@ -84,7 +84,7 @@ export function ConfirmDialog({
       <div
         role="alertdialog"
         aria-modal="true"
-        className="dialog-enter relative w-full max-w-[360px] overflow-hidden rounded-2xl border border-slate-200 bg-white p-5 shadow-pop"
+        className="dialog-enter relative w-full max-w-[360px] overflow-hidden rounded-[20px] bg-white p-5 shadow-pop"
       >
         {phase === "done" ? (
           <div className="flex flex-col items-center py-3 text-center">

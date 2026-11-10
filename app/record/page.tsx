@@ -32,9 +32,17 @@ export default async function RecordPage() {
         <RecordButton mockMode={mockMode} />
       </div>
 
-      <details className="mx-auto mt-10 w-full max-w-md rounded-xl border border-slate-200 bg-white px-4 py-3.5 text-sm open:shadow-sm">
-        <summary className="cursor-pointer list-none text-sm font-medium text-slate-700 marker:hidden">
+      <details className="mx-auto mt-10 w-full max-w-md rounded-[20px] bg-white px-5 py-4 text-sm shadow-card [&[open]_.chev]:rotate-180">
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-medium text-slate-700 marker:hidden">
           录不了音 / 提示「麦克风权限被拒绝」？点开看怎么开
+          <svg
+            className="chev h-4 w-4 shrink-0 text-slate-400 transition-transform duration-200"
+            viewBox="0 0 16 16"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </summary>
 
         <div className="mt-3 space-y-4 text-xs leading-relaxed text-slate-500">

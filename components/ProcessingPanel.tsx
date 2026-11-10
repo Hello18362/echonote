@@ -173,7 +173,7 @@ export function ProcessingPanel({ id }: { id: string }) {
 
   if (notFound) {
     return (
-      <div className="stagger-item rounded-2xl border border-slate-200 bg-white p-8 text-center">
+      <div className="stagger-item rounded-[20px] bg-white p-8 text-center">
         <p className="text-sm text-slate-600">记录不存在</p>
         <Link
           href="/"
@@ -190,7 +190,7 @@ export function ProcessingPanel({ id }: { id: string }) {
   const blocked = failed || stalled;
 
   return (
-    <div className="stagger-item rounded-2xl border border-slate-200/80 bg-white p-6 shadow-card sm:p-8">
+    <div className="stagger-item rounded-[20px] bg-white p-6 shadow-card sm:p-8">
       {blocked ? (
         <div className="flex flex-col items-center text-center">
           <span className="flex h-12 w-12 items-center justify-center rounded-full bg-red-50 text-red-500">

@@ -46,7 +46,7 @@ export default async function SharedNotePage({ params }: Props) {
   if (!record) {
     return (
       <main className="mx-auto w-full max-w-3xl px-4 pb-24 pt-16 sm:px-6">
-        <div className="rounded-2xl border border-slate-200 bg-white p-10 text-center">
+        <div className="rounded-[20px] bg-white p-10 text-center">
           <p className="text-base font-semibold text-slate-800">这个分享链接已经失效</p>
           <p className="mt-1.5 text-sm text-slate-500">
             笔记可能被删除，或者分享者主动关闭了分享。
@@ -82,7 +82,7 @@ export default async function SharedNotePage({ params }: Props) {
         </Link>
       </header>
 
-      <article className="mt-5 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-7">
+      <article className="mt-5 rounded-[20px] bg-white p-5 shadow-card sm:p-7">
         <h1 className="text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">
           {record.title}
         </h1>

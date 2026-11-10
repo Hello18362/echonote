@@ -134,7 +134,7 @@ export function EditableSection({
                 type="button"
                 onClick={cancel}
                 disabled={saving}
-                className="pressable inline-flex h-9 items-center gap-1 rounded-lg border border-slate-200 bg-white px-3 text-xs font-medium text-slate-600 transition-colors hover:bg-slate-50 disabled:opacity-50"
+                className="pressable inline-flex h-9 items-center gap-1 btn-pill btn-secondary px-3 text-xs font-medium text-slate-600 transition-colors disabled:opacity-50"
               >
                 <CloseIcon className="h-3.5 w-3.5" />
                 取消

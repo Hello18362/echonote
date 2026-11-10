@@ -82,7 +82,7 @@ export function QuickUpload({ className }: { className?: string }) {
         aria-label="上传音频文件"
         title="上传音频文件（手机录音可从这里导入）"
         className={cn(
-          "btn-pill btn-secondary h-11 px-6 text-[15px]",
+          "btn-pill h-11 bg-white px-5 text-[15px] text-slate-700 shadow-card transition-shadow hover:shadow-card-hover",
           className,
         )}
       >

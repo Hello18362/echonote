@@ -32,7 +32,7 @@ export default function GlobalError({
         </Button>
         <Link
           href="/"
-          className="pressable inline-flex min-h-[44px] items-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          className="pressable inline-flex min-h-[44px] items-center btn-pill btn-secondary px-4 text-sm font-medium text-slate-700"
         >
           返回首页
         </Link>

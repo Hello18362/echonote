@@ -308,7 +308,7 @@ export default function SettingsPage() {
         onModels={() => void runProbe("models")}
       />
 
-      <div className="stagger-item mt-5 flex flex-wrap items-center gap-3 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card">
+      <div className="stagger-item mt-5 flex flex-wrap items-center gap-3 rounded-[20px] bg-white p-5 shadow-card">
         <Button onClick={() => void save()} disabled={saving || !snapshot}>
           {saving ? "保存中…" : "保存设置"}
         </Button>
@@ -320,7 +320,7 @@ export default function SettingsPage() {
         </p>
       </div>
 
-      <section className="stagger-item mt-5 rounded-2xl border border-slate-200/80 bg-white p-5 text-xs leading-relaxed text-slate-500 shadow-card">
+      <section className="stagger-item mt-5 rounded-[20px] bg-white p-5 text-xs leading-relaxed text-slate-500 shadow-card">
         <p className="text-sm font-medium text-slate-800">存储与隐私</p>
         <p className="mt-2">
           音频文件保存在本机 <code className="font-mono">data/audio/</code>，当前{" "}
@@ -347,7 +347,7 @@ export default function SettingsPage() {
               type="button"
               onClick={() => void pruneAudio()}
               disabled={cleaning}
-              className="pressable inline-flex h-8 items-center rounded-lg bg-white px-3 text-[11px] font-medium text-amber-700 ring-1 ring-amber-200 transition-colors hover:bg-amber-100 disabled:opacity-60"
+              className="pressable inline-flex h-8 items-center rounded-full bg-white/80 px-3.5 text-[11px] font-medium text-amber-700 ring-1 ring-amber-200 transition-colors hover:bg-white disabled:opacity-60"
             >
               {cleaning ? "清理中…" : "清理"}
             </button>
@@ -362,7 +362,7 @@ export default function SettingsPage() {
             <button
               type="button"
               onClick={() => void logout()}
-              className="pressable inline-flex h-8 items-center rounded-lg bg-white px-3 text-[11px] font-medium text-slate-600 ring-1 ring-slate-200 transition-colors hover:bg-slate-100"
+              className="pressable inline-flex h-8 items-center rounded-full bg-white px-3.5 text-[11px] font-medium text-slate-600 ring-1 ring-slate-200 transition-colors hover:bg-slate-100"
             >
               退出登录
             </button>
@@ -372,7 +372,7 @@ export default function SettingsPage() {
 
       <section
         id="data"
-        className="stagger-item mt-5 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card"
+        className="stagger-item mt-5 rounded-[20px] bg-white p-5 shadow-card"
       >
         <p className="text-sm font-medium text-slate-800">备份与恢复</p>
         <p className="mt-2 text-xs leading-relaxed text-slate-500">
@@ -384,14 +384,14 @@ export default function SettingsPage() {
         <div className="mt-4 flex flex-wrap items-center gap-2">
           <a
             href="/api/export?format=json"
-            className="pressable inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+            className="btn-pill btn-secondary inline-flex min-h-[44px] items-center gap-1.5 px-5 text-[15px] font-medium"
           >
             <DownloadIcon className="h-4 w-4" />
             导出 JSON
           </a>
           <a
             href="/api/export?format=md"
-            className="pressable inline-flex min-h-[44px] items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+            className="btn-pill btn-secondary inline-flex min-h-[44px] items-center gap-1.5 px-5 text-[15px] font-medium"
           >
             <DownloadIcon className="h-4 w-4" />
             导出 Markdown
@@ -472,7 +472,7 @@ function ProviderCard({
   const ready = state?.ready ?? false;
 
   return (
-    <section className="stagger-item mt-5 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+    <section className="stagger-item mt-5 rounded-[20px] bg-white p-5 shadow-card sm:p-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <h2 className="text-base font-semibold text-slate-900">{title}</h2>
@@ -496,7 +496,7 @@ function ProviderCard({
               key={p.label}
               type="button"
               onClick={() => onPreset(p)}
-              className="pressable rounded-lg border border-slate-200 px-2.5 py-1.5 text-xs text-slate-600 transition-colors duration-200 hover:border-brand-500 hover:bg-brand-50 hover:text-brand-700"
+              className="pressable rounded-full bg-slate-100 px-3 py-1.5 text-xs text-slate-700 transition-colors duration-200 hover:bg-slate-200 hover:text-slate-900"
             >
               {p.label}
             </button>
@@ -513,7 +513,7 @@ function ProviderCard({
             inputMode="url"
             autoComplete="off"
             spellCheck={false}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-800 outline-none transition-colors duration-200 placeholder:text-slate-300 focus:border-brand-500"
+            className="w-full rounded-[10px] border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-800 outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
           />
         </Field>
 
@@ -528,7 +528,7 @@ function ProviderCard({
             type="password"
             autoComplete="off"
             spellCheck={false}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 font-mono text-sm text-slate-800 outline-none transition-colors duration-200 placeholder:text-slate-300 focus:border-brand-500"
+            className="w-full rounded-[10px] border border-slate-300 bg-white px-3.5 py-2.5 font-mono text-sm text-slate-800 outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
           />
         </Field>
 
@@ -539,7 +539,7 @@ function ProviderCard({
             placeholder="模型名称"
             autoComplete="off"
             spellCheck={false}
-            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 font-mono text-sm text-slate-800 outline-none transition-colors duration-200 placeholder:text-slate-300 focus:border-brand-500"
+            className="w-full rounded-[10px] border border-slate-300 bg-white px-3.5 py-2.5 font-mono text-sm text-slate-800 outline-none transition-[border-color,box-shadow] duration-200 placeholder:text-slate-300 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15"
           />
         </Field>
       </div>

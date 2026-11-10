@@ -27,7 +27,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
   if (!record) {
     return (
       <main className="mx-auto w-full max-w-3xl px-4 pb-[calc(6rem+env(safe-area-inset-bottom))] pt-10 sm:px-6">
-        <div className="stagger-item rounded-2xl border border-slate-200 bg-white p-10 text-center">
+        <div className="stagger-item rounded-[20px] bg-white p-10 text-center">
           <p className="text-base font-semibold text-slate-800">记录不存在</p>
           <p className="mt-1.5 text-sm text-slate-500">这条录音可能已经被删除了</p>
           <Link
@@ -70,7 +70,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
 
       <SharedPanel id={record.id} className="mt-4">
         {/* 顶部信息区 */}
-        <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+        <section className="rounded-[20px] bg-white p-5 shadow-card sm:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
             <div className="min-w-0 flex-1">
               <EditableTitle id={record.id} initial={record.title} />
@@ -148,7 +148,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
         ) : null}
 
         {/* 会议纪要独占整行：分节 + 表格，挤在窄栏里读不动 */}
-        <section className="mt-5 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+        <section className="mt-5 rounded-[20px] bg-white p-5 shadow-card sm:p-6">
           <EditableSection
             id={record.id}
             field="summary"
@@ -166,7 +166,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
 
         {/* 两栏：桌面左右，手机上下 */}
         <div className="mt-5 grid grid-cols-1 items-start gap-5 lg:grid-cols-2">
-          <section className="order-2 rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6 lg:order-1">
+          <section className="order-2 rounded-[20px] bg-white p-5 shadow-card sm:p-6 lg:order-1">
             <EditableSection
               id={record.id}
               field="transcript"
@@ -185,7 +185,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
           </section>
 
           <aside className="order-1 space-y-5 lg:order-2">
-            <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+            <section className="rounded-[20px] bg-white p-5 shadow-card sm:p-6">
               <EditableSection
                 id={record.id}
                 field="todos"
@@ -207,7 +207,7 @@ export default async function NotePage({ params }: { params: { id: string } }) {
               </EditableSection>
             </section>
 
-            <section className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-card sm:p-6">
+            <section className="rounded-[20px] bg-white p-5 shadow-card sm:p-6">
               <EditableSection
                 id={record.id}
                 field="keyPoints"

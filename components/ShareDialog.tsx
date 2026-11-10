@@ -116,7 +116,7 @@ export function ShareDialog({ id, open, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-label="只读分享"
-        className="dialog-enter relative w-full max-w-[420px] rounded-2xl border border-slate-200 bg-white p-5 shadow-pop"
+        className="dialog-enter relative w-full max-w-[420px] rounded-[20px] bg-white p-5 shadow-pop"
       >
         <div className="flex items-start justify-between gap-3">
           <div>
@@ -150,7 +150,7 @@ export function ShareDialog({ id, open, onClose }: Props) {
               value={link}
               aria-label="分享链接"
               onFocus={(e) => e.currentTarget.select()}
-              className="h-11 w-full rounded-xl border border-slate-200 bg-slate-50 px-3 text-sm text-slate-700 outline-none focus:border-brand-400"
+              className="h-11 w-full rounded-[16px] bg-slate-50 px-3 text-sm text-slate-700 outline-none focus:border-brand-400"
             />
             <div className="flex flex-wrap items-center gap-2">
               <Button onClick={() => void copy()} disabled={busy}>
@@ -160,7 +160,7 @@ export function ShareDialog({ id, open, onClose }: Props) {
                 href={link}
                 target="_blank"
                 rel="noreferrer"
-                className="pressable inline-flex min-h-[44px] items-center rounded-xl border border-slate-200 bg-white px-4 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50"
+                className="pressable inline-flex min-h-[44px] items-center btn-pill btn-secondary px-4 text-sm font-medium text-slate-700 transition-colors"
               >
                 预览
               </a>

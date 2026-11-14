@@ -6,7 +6,7 @@
  *   npm run backup
  *   node scripts/backup.mjs --keep 14                     # 保留 14 份
  *   node scripts/backup.mjs --no-audio                    # 只备份数据库
- *   node scripts/backup.mjs --out "D:\\我的空间\\EchoNote备份"  # 备份到别的盘
+ *   node scripts/backup.mjs --out "D:\\EchoNote备份"      # 备份到别的盘
  *
  * 建议用 Windows 任务计划 / macOS launchd / cron 每天跑一次，见使用文档。
  */

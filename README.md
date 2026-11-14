@@ -85,6 +85,7 @@ macOS / Linux 用 `npm run serve` 即可，它是同一个启动器（`scripts/s
 | `INBOX_DIR` | 录音收件箱目录 | 项目根目录下 `录音收件箱` |
 | `INBOX_AUTO_PROCESS` | 设为 `0` 时只导入不自动转写 | 自动转写 |
 | `FFPROBE_PATH` | ffprobe 可执行文件路径 | 自动查找 PATH / winget 默认目录 |
+| `ECHONOTE_BACKUP_DIR` | 备份输出目录（`npm run backup` 与开机补跑共用） | 项目内 `backups/` |
 
 所有外部服务在环境变量缺失时自动降级，**项目在零 Key 情况下可完整跑通**。首页右上角会显示「Mock 模式」角标。
 
@@ -137,7 +138,7 @@ lib/
 ├── format.ts                    # 时长 / 日期格式化
 ├── markdown.ts                  # 单条 + 全量 Markdown 排版
 └── audioStore.ts                # 音频落盘 / 流式读写 / 孤儿清理
-scripts/backup.mjs               # npm run backup：整库 + 音频，保留最近 N 份
+scripts/backup.mjs               # npm run backup：整库 + 音频，份与份之间用硬链接复用
 prisma/schema.prisma
 ```
 
@@ -150,6 +151,21 @@ prisma/schema.prisma
 - **分享页** `/s/[token]`：拿到链接即可只读查看，无编辑 / 删除 / 导出入口，不提供音频；关闭分享后旧链接立即失效
 
 交互细节参考 UI 提示词库实现：按压回弹与水波扩散、列表交错弹入、骨架屏流光、3D 倾斜光影、共享元素转场（卡片 → 详情）、笔画勾选与待办进度联动、Toast 堆叠让位与倒计时进度条、确认弹窗回弹并在原地切换完成态。
+
+## 备份
+
+```bash
+npm run backup                                        # 备份到 backups/，保留最近 7 份
+npm run backup -- --out "D:\EchoNote备份" --keep 14   # 指定目录与份数
+node scripts/backup.mjs --no-audio                    # 只备份数据库
+```
+
+- 内容是**整库 + 全部音频 + package.json**（顺带记下备份对应哪一版代码）
+- **音频在份与份之间用硬链接复用**：同名同大小的文件不重复写入，第 2 份起几乎不占空间。
+  实测 250MB 音频，新增一份实际只占 252KB（仅数据库副本）。跨卷或文件系统不支持硬链接时自动退回真实复制
+- `--catch-up` 用于开机补跑：最近一份不足 20 小时就直接退出。`scripts/boot.mjs` 在服务就绪 60 秒后调用一次，
+  补上「定时任务到点时机器关机、当天就没备份」这个洞
+- 清理旧备份只认 `20261110-030000` 这种目录名，不会误删目标目录里的其他文件
 
 ## 部署到 Vercel
 
@@ -215,3 +231,7 @@ npm run backup
 - [x] `npm run build` 无 TypeScript / ESLint 报错
 - [x] 删除记录时音频文件一起清掉，残留可一键清理
 - [x] `npm run smoke` 123/123、`node scripts/ui-check.mjs` 89/89（dev 与 `next start` 生产模式都跑过）
+
+## License
+
+[MIT](./LICENSE)

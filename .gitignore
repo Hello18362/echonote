@@ -11,6 +11,10 @@ shots
 .tmp
 # 上传的原始音频，体积大且属于用户数据
 data/
+# 录音收件箱：里面放的是待导入的真实录音，只保留说明文件。
+# 仓库已公开，一条会议录音被 add -A 带上去就收不回来了。
+录音收件箱/*
+!录音收件箱/说明.txt
 # next dev --experimental-https 生成的本地证书
 certificates/
 

@@ -137,6 +137,45 @@ function scheduleRestart() {
   }, delay);
 }
 
+/**
+ * 每日 03:00 的备份计划任务在机器关机时那一趟就丢了（实测漏过一整天）。
+ * 服务是开机必起的，所以这里补一次：最近备份超过 20 小时才真备份，否则几毫秒退出。
+ * 延迟 60 秒，错开开机时的磁盘高峰。
+ */
+let backupChecked = false;
+
+function scheduleBackupCheck() {
+  if (backupChecked) return;
+  backupChecked = true;
+
+  setTimeout(() => {
+    if (shuttingDown) return;
+
+    const proc = spawn(node, [path.join(root, "scripts", "backup.mjs"), "--catch-up"], {
+      cwd: root,
+      stdio: ["ignore", "pipe", "pipe"],
+    });
+
+    let out = "";
+    const collect = (chunk) => {
+      out += chunk.toString();
+    };
+    proc.stdout?.on("data", collect);
+    proc.stderr?.on("data", collect);
+
+    proc.on("error", (err) => log(`  [备份] 启动失败：${err.message}`));
+    proc.on("exit", (code) => {
+      const tail = out
+        .trim()
+        .split(/\r?\n/)
+        .filter(Boolean)
+        .slice(-2)
+        .join("  ");
+      log(`  [备份] 检查完成（exit=${code ?? "null"}）  ${tail}`);
+    });
+  }, 60 * 1000);
+}
+
 async function launch() {
   log("  EchoNote 启动中…（首次约 5 秒）");
 
@@ -162,6 +201,9 @@ async function launch() {
   log("  首页有一条蓝色入口，可以直接打开那个文件夹。");
   log("  ────────────────────────────────────────");
   log("");
+
+  // 服务已经在应答了，顺手补一次开机备份检查（不阻塞，也不影响启动）
+  scheduleBackupCheck();
 
   child.on("exit", (code, signal) => {
     if (shuttingDown) return;

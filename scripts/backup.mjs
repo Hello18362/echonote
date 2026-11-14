@@ -14,13 +14,13 @@ import {
   appendFileSync,
   cpSync,
   existsSync,
+  linkSync,
   mkdirSync,
   readdirSync,
   readFileSync,
   rmSync,
   statSync,
   statfsSync,
-  truncateSync,
   writeFileSync,
 } from "node:fs";
 import path from "node:path";
@@ -42,10 +42,22 @@ function strValue(name, fallback) {
   return v && !v.startsWith("--") ? v : fallback;
 }
 
-const KEEP = argValue("--keep", 7);
+const KEEP = argValue("--keep", 14);
 const WITH_AUDIO = !argv.includes("--no-audio");
-/** 备份根目录；相对路径按项目根解析，允许指到别的盘 */
-const OUT_ROOT = path.resolve(ROOT, strValue("--out", "backups"));
+/**
+ * 备份根目录优先级：--out 参数 > .env 的 ECHONOTE_BACKUP_DIR > 项目内 backups/。
+ * 这样启动器补跑时不传参数也能找到同一个位置。
+ */
+const OUT_ROOT = path.resolve(
+  ROOT,
+  strValue("--out", readEnv().ECHONOTE_BACKUP_DIR || "backups"),
+);
+
+/** 补跑模式：只在上次备份超过 CATCH_UP_HOURS 小时时才真的备份 */
+const CATCH_UP = argv.includes("--catch-up");
+const CATCH_UP_HOURS = Number(process.env.ECHONOTE_CATCHUP_HOURS) > 0
+  ? Number(process.env.ECHONOTE_CATCHUP_HOURS)
+  : 20;
 
 /** 指定日志文件时自己写，避免 shell 重定向把中文写成乱码 */
 const LOG_FILE = strValue("--log", "") ? path.resolve(ROOT, strValue("--log", "")) : "";
@@ -104,18 +116,6 @@ function stamp() {
   return `${d.getFullYear()}${p(d.getMonth() + 1)}${p(d.getDate())}-${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
 }
 
-function dirSize(dir) {
-  let total = 0;
-  for (const entry of readdirSync(dir, { withFileTypes: true })) {
-    const full = path.join(dir, entry.name);
-    try {
-      total += entry.isDirectory() ? dirSize(full) : statSync(full).size;
-    } catch {
-      // 单个文件读不到就跳过
-    }
-  }
-  return total;
-}
 
 function fmt(bytes) {
   if (bytes < 1024) return `${bytes} B`;
@@ -126,12 +126,110 @@ function fmt(bytes) {
 /** 备份目录名固定是 20261110-030000 这种，清理时只认这种，避免误删目标目录里的别的东西 */
 const STAMP_RE = /^\d{8}-\d{6}$/;
 
+/** 把 20261110-030000 解析成时间戳，判断「上次备份多久以前」 */
+function stampToTime(name) {
+  const m = /^(\d{4})(\d{2})(\d{2})-(\d{2})(\d{2})(\d{2})$/.exec(name);
+  if (!m) return 0;
+  return new Date(+m[1], +m[2] - 1, +m[3], +m[4], +m[5], +m[6]).getTime();
+}
+
+/** 已有的最新一份备份时间；没有就返回 0 */
+function latestBackupTime(outRoot) {
+  if (!existsSync(outRoot)) return 0;
+  let latest = 0;
+  for (const entry of readdirSync(outRoot, { withFileTypes: true })) {
+    if (!entry.isDirectory() || !STAMP_RE.test(entry.name)) continue;
+    latest = Math.max(latest, stampToTime(entry.name));
+  }
+  return latest;
+}
+
+/**
+ * 收集历史备份里已有音频：文件名 -> 路径/大小。
+ * 音频用 UUID 命名、写入后不再改动，所以完全可以跨备份共用同一份物理数据。
+ */
+function indexExistingAudio(outRoot) {
+  const index = new Map();
+  if (!existsSync(outRoot)) return index;
+
+  const dirs = readdirSync(outRoot, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && STAMP_RE.test(d.name))
+    .map((d) => d.name)
+    .sort()
+    .reverse();
+
+  for (const name of dirs) {
+    const dir = path.join(outRoot, name, "audio");
+    if (!existsSync(dir)) continue;
+    for (const entry of readdirSync(dir, { withFileTypes: true })) {
+      if (!entry.isFile() || index.has(entry.name)) continue;
+      const full = path.join(dir, entry.name);
+      try {
+        index.set(entry.name, { full, size: statSync(full).size });
+      } catch {
+        // 读不到就当作没有，走复制
+      }
+    }
+  }
+  return index;
+}
+
+/**
+ * 拷贝音频目录，但已有同内容的文件用硬链接复用，不重复占空间。
+ * 硬链接失败（跨卷、文件系统不支持）时自动退回真实复制，不影响备份完整性。
+ */
+function copyAudioPooled(srcDir, destDir, index) {
+  mkdirSync(destDir, { recursive: true });
+  let copied = 0;
+  let linked = 0;
+  let bytes = 0;
+
+  for (const entry of readdirSync(srcDir, { withFileTypes: true })) {
+    if (!entry.isFile()) continue;
+    const from = path.join(srcDir, entry.name);
+    const to = path.join(destDir, entry.name);
+    let size = 0;
+    try {
+      size = statSync(from).size;
+      bytes += size;
+    } catch {
+      continue;
+    }
+
+    const hit = index.get(entry.name);
+    if (hit && hit.size === size) {
+      try {
+        linkSync(hit.full, to);
+        linked += 1;
+        continue;
+      } catch {
+        // 退回复制
+      }
+    }
+    try {
+      cpSync(from, to);
+      copied += 1;
+    } catch (err) {
+      say(`提示：${entry.name} 拷贝失败（${err.message}）`);
+    }
+  }
+  return { copied, linked, bytes };
+}
+
 /** 目标盘剩余空间不够就提前退出，比拷到一半写满更安全 */
-function ensureSpace(dir, needBytes) {
+function freeBytes(dir) {
   try {
     const st = statfsSync(dir);
-    const free = Number(st.bavail) * Number(st.bsize);
-    if (needBytes > 0 && free < needBytes * 1.15) {
+    return Number(st.bavail) * Number(st.bsize);
+  } catch {
+    return 0;
+  }
+}
+
+function ensureSpace(dir, needBytes) {
+  try {
+    const free = freeBytes(dir);
+    if (needBytes > 0 && free > 0 && free < needBytes * 1.15) {
       say(`✗ 目标盘空间不足：需要约 ${fmt(needBytes)}，可用 ${fmt(free)}。已中止，未改动任何文件。`);
       process.exit(1);
     }
@@ -141,6 +239,21 @@ function ensureSpace(dir, needBytes) {
 }
 
 function main() {
+  // 补跑模式：开机时由启动器调用，最近备份还新鲜就直接退出，不做无谓的拷贝
+  if (CATCH_UP) {
+    const latest = latestBackupTime(OUT_ROOT);
+    if (latest) {
+      const hours = (Date.now() - latest) / 3600000;
+      if (hours < CATCH_UP_HOURS) {
+        say(`最近一份备份在 ${hours.toFixed(1)} 小时前，还新鲜，跳过。`);
+        return;
+      }
+      say(`最近一份备份在 ${hours.toFixed(1)} 小时前（超过 ${CATCH_UP_HOURS} 小时），补跑一次。`);
+    } else {
+      say("还没有任何备份，立即补跑一次。");
+    }
+  }
+
   say(`—— ${new Date().toLocaleString("zh-CN")} 开始备份 ——`);
   const db = resolveDbPath();
   if (!db) {
@@ -149,10 +262,26 @@ function main() {
   }
 
   const audioSrc = path.join(ROOT, "data", "audio");
-  const audioBytes = WITH_AUDIO && existsSync(audioSrc) ? dirSize(audioSrc) : 0;
-
   mkdirSync(OUT_ROOT, { recursive: true });
-  ensureSpace(OUT_ROOT, audioBytes + statSync(db).size);
+
+  // 先看历史备份里哪些音频能直接复用，再算真实需要多少空间，避免误判空间不足
+  const audioIndex =
+    WITH_AUDIO && existsSync(audioSrc) ? indexExistingAudio(OUT_ROOT) : new Map();
+  let needBytes = statSync(db).size;
+  if (WITH_AUDIO && existsSync(audioSrc)) {
+    for (const entry of readdirSync(audioSrc, { withFileTypes: true })) {
+      if (!entry.isFile()) continue;
+      try {
+        const size = statSync(path.join(audioSrc, entry.name)).size;
+        const hit = audioIndex.get(entry.name);
+        if (!(hit && hit.size === size)) needBytes += size;
+      } catch {
+        // 读不到就不计入
+      }
+    }
+  }
+  ensureSpace(OUT_ROOT, needBytes);
+  const freeBefore = freeBytes(OUT_ROOT);
 
   const target = path.join(OUT_ROOT, stamp());
   mkdirSync(target, { recursive: true });
@@ -175,8 +304,8 @@ function main() {
   let audioInfo = "已跳过";
   if (WITH_AUDIO) {
     if (existsSync(audioSrc)) {
-      cpSync(audioSrc, path.join(target, "audio"), { recursive: true });
-      audioInfo = fmt(dirSize(path.join(target, "audio")));
+      const r = copyAudioPooled(audioSrc, path.join(target, "audio"), audioIndex);
+      audioInfo = `${fmt(r.bytes)}（复用 ${r.linked} 个，新复制 ${r.copied} 个）`;
     } else {
       audioInfo = "暂无音频";
     }
@@ -194,6 +323,11 @@ function main() {
   say(`音频：${audioInfo}`);
   say(`输出目录：${target}`);
 
+  const freeAfter = freeBytes(OUT_ROOT);
+  if (freeBefore > 0 && freeAfter > 0) {
+    say(`本份实际占用：约 ${fmt(Math.max(0, freeBefore - freeAfter))}`);
+  }
+
   // 清理旧备份，保留最近 KEEP 份（按目录名排序即时间排序）
   const dirs = readdirSync(OUT_ROOT, { withFileTypes: true })
     .filter((d) => d.isDirectory() && STAMP_RE.test(d.name))
@@ -206,7 +340,7 @@ function main() {
     say(`清理旧备份：${name}`);
   }
 
-  say(`完成。当前保留 ${Math.min(dirs.length, KEEP)} 份备份。`);
+  say(`完成。当前保留 ${Math.min(dirs.length, KEEP)} 份备份（未变的音频在份与份之间共用同一份物理数据，份数多不多占空间）。`);
 }
 
 main();

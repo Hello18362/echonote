@@ -2,6 +2,7 @@
   "name": "echonote",
   "version": "0.2.0",
   "private": true,
+  "license": "MIT",
   "scripts": {
     "dev": "next dev",
     "dev:lan": "next dev -H 0.0.0.0",
